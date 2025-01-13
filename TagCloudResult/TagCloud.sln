@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagCloud", "TagCloud\TagCloud.csproj", "{2AF38A2D-EE49-4C1D-A38F-7B524AF31ACA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagCloudTests", "TagCloudTests\TagCloudTests.csproj", "{68CB9437-2F08-4A23-A165-ECB72F1C0E07}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F41DEF5A-5A77-4DD8-8987-05AAF41B37F7} = {F41DEF5A-5A77-4DD8-8987-05AAF41B37F7}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TagCloudClients", "TagCloudClients\TagCloudClients.csproj", "{F41DEF5A-5A77-4DD8-8987-05AAF41B37F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResultTools", "ResultTools\ResultTools.csproj", "{08119452-50F7-4CF5-A28F-59122A12EECF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AF38A2D-EE49-4C1D-A38F-7B524AF31ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AF38A2D-EE49-4C1D-A38F-7B524AF31ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AF38A2D-EE49-4C1D-A38F-7B524AF31ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AF38A2D-EE49-4C1D-A38F-7B524AF31ACA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68CB9437-2F08-4A23-A165-ECB72F1C0E07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CB9437-2F08-4A23-A165-ECB72F1C0E07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68CB9437-2F08-4A23-A165-ECB72F1C0E07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68CB9437-2F08-4A23-A165-ECB72F1C0E07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F41DEF5A-5A77-4DD8-8987-05AAF41B37F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F41DEF5A-5A77-4DD8-8987-05AAF41B37F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F41DEF5A-5A77-4DD8-8987-05AAF41B37F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F41DEF5A-5A77-4DD8-8987-05AAF41B37F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08119452-50F7-4CF5-A28F-59122A12EECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08119452-50F7-4CF5-A28F-59122A12EECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08119452-50F7-4CF5-A28F-59122A12EECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08119452-50F7-4CF5-A28F-59122A12EECF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {697D441B-1F34-4177-90F6-6EB0176AF803}
+	EndGlobalSection
+EndGlobal
