@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using ResultTools;
 using TagCloud;
 using TagCloud.BitmapGenerators;
 using TagCloud.CloudImageSavers;
@@ -42,7 +43,9 @@ public class ConsoleClient : IClient
         spiralSettings.SetSettings(SettingsManager.GetSpiralSettings(options));
         readerSettings.SetSettings(SettingsManager.GetReaderSettings(options));
 
-        var output = generator.GenerateCloud();
-        Console.WriteLine($"Cloud image save to path {output}");
+        generator.GenerateCloud()
+            .Then(Console.WriteLine)
+            .RefineError("Finished with error: ")
+            .OnFail(Console.WriteLine);
     }
 }

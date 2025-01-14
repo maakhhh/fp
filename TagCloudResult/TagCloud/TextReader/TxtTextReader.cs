@@ -1,4 +1,5 @@
-﻿using TagCloud.SettingsProviders;
+﻿using ResultTools;
+using TagCloud.SettingsProviders;
 
 namespace TagCloud.TextReader;
 
@@ -6,9 +7,11 @@ public class TxtTextReader(ISettingsProvider<TextReaderSettings> settingsProvide
 {
     public IReadOnlyList<string> SupportedFormats() => ["txt"];
 
-    public string Read()
+    public Result<string> Read()
     {
         var settings = settingsProvider.GetSettings();
-        return File.ReadAllText(settings.Path, settings.Encoding);
+        return File.Exists(settings.Path) 
+            ? File.ReadAllText(settings.Path).AsResult() 
+            : Result.Fail<string>($"File {settings.Path} does not exist.");
     }
 }

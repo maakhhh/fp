@@ -2,7 +2,7 @@
   "profiles": {
     "TagCloudClients": {
       "commandName": "Project",
-      "commandLineArgs": "-i \"InputSamples/input.txt\""
+      "commandLineArgs": "-i \"InputSamples/input2.txt\""
     }
   }
 }

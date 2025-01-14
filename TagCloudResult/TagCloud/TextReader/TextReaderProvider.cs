@@ -1,4 +1,5 @@
-﻿using TagCloud.SettingsProviders;
+﻿using ResultTools;
+using TagCloud.SettingsProviders;
 
 namespace TagCloud.TextReader;
 
@@ -15,20 +16,19 @@ public class TextReaderProvider
         this.readers = readers;
     }
 
-    public ITextReader GetActualReader()
+    public Result<ITextReader> GetActualReader()
     {
         var path = settingsProvider.GetSettings().Path;
         var splittedPath = path.Split('.');
         if (splittedPath.Length < 2)
-            throw new ArgumentException($"Указан неверный путь до входного файла: {path}");
+            return Result.Fail<ITextReader>($"Указан неверный путь до входного файла: {path}");
 
         var format = splittedPath.Last();
 
         var reader = readers.FirstOrDefault(r => r.SupportedFormats().Contains(format.ToLower()));
 
-        if (reader == null)
-            throw new ArgumentException($"Данный формат файла не поддерживается: {format}");
-
-        return reader;
+        return reader == null 
+            ? Result.Fail<ITextReader>($"Данный формат файла не поддерживается: {format}") 
+            : reader.AsResult();
     }
 }

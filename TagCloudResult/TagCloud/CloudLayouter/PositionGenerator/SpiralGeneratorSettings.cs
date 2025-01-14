@@ -10,9 +10,6 @@ public class SpiralGeneratorSettings
 
     public SpiralGeneratorSettings(double angleOffset, double spiralStep, Point center)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(angleOffset);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(spiralStep);
-
         AngleOffset = angleOffset;
         SpiralStep = spiralStep;
         Center = center;

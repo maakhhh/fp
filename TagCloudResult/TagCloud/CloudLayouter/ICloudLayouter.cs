@@ -1,9 +1,10 @@
 ﻿using System.Drawing;
+using ResultTools;
 
 namespace TagCloud.CloudLayouter;
 
 public interface ICloudLayouter
 {
     List<Rectangle> GetRectangles();
-    Rectangle PutNextRectangle(Size rectangleSize);
+    Result<Rectangle> PutNextRectangle(Size rectangleSize);
 }

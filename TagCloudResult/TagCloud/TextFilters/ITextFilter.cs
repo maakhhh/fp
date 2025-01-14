@@ -1,6 +1,8 @@
-﻿namespace TagCloud.TextFilters;
+﻿using ResultTools;
+
+namespace TagCloud.TextFilters;
 
 public interface ITextFilter
 {
-    IEnumerable<string> Apply(IEnumerable<string> text);
+    Result<IEnumerable<string>> Apply(IEnumerable<string> text);
 }

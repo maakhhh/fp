@@ -1,4 +1,6 @@
-﻿using TagCloud.BitmapGenerators;
+﻿using System.Diagnostics.CodeAnalysis;
+using ResultTools;
+using TagCloud.BitmapGenerators;
 using TagCloud.CloudImageSavers;
 using TagCloud.TextFilters;
 using TagCloud.TextReader;
@@ -6,6 +8,7 @@ using TagCloud.TextSplitters;
 
 namespace TagCloud;
 
+[SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы")]
 public class TagCloudImageGenerator
 {
     private readonly TextReaderProvider readerProvider;
@@ -30,26 +33,35 @@ public class TagCloudImageGenerator
         this.filters = filters;
     }
 
-    public string GenerateCloud()
+    public Result<string> GenerateCloud()
     {
         var reader = readerProvider.GetActualReader();
-        var words = splitter.Split(reader.Read());
+        return reader
+            .Then(r => r.Read())
+            .Then(text => splitter.Split(text))
+            .Then(BuildWordsFrequency)
+            .Then(ConvertToCloudWord)
+            .Then(bitmapGenerator.GenerateBitmapFromWords)
+            .Then(saver.Save);
+    }
 
-        var wordsFrequency = filters
-            .Aggregate(words, (word, filter) => filter.Apply(word))
-            .GroupBy(w => w)
-            .ToDictionary(words => words.Key, words => words.Count());
-
+    private Result<IEnumerable<CloudWord>> ConvertToCloudWord(Dictionary<string, int> wordsFrequency)
+    {
         var minWordCount = wordsFrequency.Values.Min();
         var maxWordCount = wordsFrequency.Values.Max();
-
-        var cloudWords = wordsFrequency
+        
+        return wordsFrequency
             .Select(w => new CloudWord(w.Key, GetWordFontSize(
-                w.Value, minWordCount, maxWordCount)));
-
-        var bitmap = bitmapGenerator.GenerateBitmapFromWords(cloudWords);
-        return saver.Save(bitmap);
+                w.Value, minWordCount, maxWordCount))).AsResult();
     }
+
+    private Result<IEnumerable<string>> ApplyFilters(IEnumerable<string> words) =>
+        filters.Aggregate(words.AsResult(), (word, filter) => word.Then(filter.Apply));
+
+    private Result<Dictionary<string, int>> BuildWordsFrequency(IEnumerable<string> words) =>
+        ApplyFilters(words).Then(filteredWords => filteredWords
+            .GroupBy(w => w)
+            .ToDictionary(w => w.Key, w => w.Count()));
 
     private int GetWordFontSize(int freqCount, int minWordCount, int maxWordCount) =>
         MIN_FONTSIZE + (MAX_FONTSIZE - MIN_FONTSIZE) 

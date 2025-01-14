@@ -1,6 +1,8 @@
-﻿namespace TagCloud.TextSplitters;
+﻿using ResultTools;
+
+namespace TagCloud.TextSplitters;
 
 public interface ITextSplitter
 {
-    IEnumerable<string> Split(string text);
+    Result<IEnumerable<string>> Split(string text);
 }

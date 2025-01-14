@@ -1,10 +1,11 @@
 ﻿using System.Drawing;
+using ResultTools;
 
 namespace TagCloud.CloudLayouter;
 public class CircularCloudLayouter : ICloudLayouter
 {
     private readonly List<Rectangle> rectangles;
-    private readonly IEnumerator<Point> pointEnumerator;
+    private readonly IEnumerator<Result<Point>> pointEnumerator;
 
     public CircularCloudLayouter(IPositionGenerator generator)
     {
@@ -14,29 +15,35 @@ public class CircularCloudLayouter : ICloudLayouter
 
     public List<Rectangle> GetRectangles() => rectangles;
 
-    public Rectangle PutNextRectangle(Size rectangleSize)
+    public Result<Rectangle> PutNextRectangle(Size rectangleSize)
     {
         if (rectangleSize.Width <= 0 || rectangleSize.Height <= 0)
-            throw new ArgumentException(
-                $"{nameof(rectangleSize)} должен иметь высоту и ширину больше нуля, передано ({rectangleSize.Width} {rectangleSize.Height})"
-            );
+            return Result.Fail<Rectangle>(
+                $"{nameof(rectangleSize)} должен иметь высоту и ширину больше нуля," +
+                $" передано ({rectangleSize.Width} {rectangleSize.Height})");
 
-        Rectangle rectangle;
+        Result<Rectangle> rectangle;
 
         do
+        {
             rectangle = PutRectangleInNextPosition(rectangleSize);
-        while (rectangles.Any(r => r.IntersectsWith(rectangle)));
+            if (!rectangle.IsSuccess)
+                return rectangle;
+        }
+        while (rectangles.Any(r => r.IntersectsWith(rectangle.Value)));
 
-        rectangles.Add(rectangle);
+        rectangles.Add(rectangle.Value);
         return rectangle;
     }
 
-    private Rectangle PutRectangleInNextPosition(Size rectagleSize)
+    private Result<Rectangle> PutRectangleInNextPosition(Size rectagleSize)
     {
         pointEnumerator.MoveNext();
         var centerOfRectangle = pointEnumerator.Current;
-        var rectanglePosition = GetPositionFromCenter(centerOfRectangle, rectagleSize);
-        return new(rectanglePosition, rectagleSize);
+        return centerOfRectangle
+            .Then(c => new Rectangle(
+                GetPositionFromCenter(c, rectagleSize),
+                rectagleSize));
     }
 
     private Point GetPositionFromCenter(Point center, Size size) => 

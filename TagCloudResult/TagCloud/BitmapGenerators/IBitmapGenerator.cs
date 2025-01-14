@@ -1,8 +1,9 @@
 ﻿using System.Drawing;
+using ResultTools;
 
 namespace TagCloud.BitmapGenerators;
 
 public interface IBitmapGenerator
 {
-    Bitmap GenerateBitmapFromWords(IEnumerable<CloudWord> words);
+    Result<Bitmap> GenerateBitmapFromWords(IEnumerable<CloudWord> words);
 }

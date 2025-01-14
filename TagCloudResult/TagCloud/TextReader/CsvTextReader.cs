@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using System.Globalization;
+using ResultTools;
 using TagCloud.SettingsProviders;
 
 namespace TagCloud.TextReader;
@@ -17,18 +18,18 @@ public class CsvTextReader : ITextReader
 
     public IReadOnlyList<string> SupportedFormats() => ["csv"];
 
-    public string Read()
+    public Result<string> Read()
     {
         var settings = settingsProvider.GetSettings();
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = true,
         };
-
+        if (!File.Exists(settings.Path))
+            return Result.Fail<string>($"File {settings.Path} does not exist.");
         using var reader = new StreamReader(settings.Path);
         using var csv = new CsvReader(reader, config);
-
-        return string.Join(Environment.NewLine, csv.GetRecords<Cell>().Select(c => c.Word));
+        return string.Join(Environment.NewLine, csv.GetRecords<Cell>().Select(c => c.Word)).AsResult();
     }
 
     private class Cell
