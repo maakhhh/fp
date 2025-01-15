@@ -1,9 +1,8 @@
 ﻿using System.Drawing;
 using ResultTools;
-using TagCloud.CloudLayouter.PositionGenerator;
 using TagCloud.SettingsProviders;
 
-namespace TagCloud.CloudLayouter;
+namespace TagCloud.CloudLayouter.PositionGenerator;
 
 public class SpiralPositionGenerator : IPositionGenerator
 {

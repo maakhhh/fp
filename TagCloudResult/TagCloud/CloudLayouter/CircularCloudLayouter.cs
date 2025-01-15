@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using ResultTools;
+using TagCloud.CloudLayouter.PositionGenerator;
 
 namespace TagCloud.CloudLayouter;
 public class CircularCloudLayouter : ICloudLayouter

@@ -12,3 +12,4 @@ public class NewLineTextSplitter : ITextSplitter
             : text.Split(SPLIT_SYMBOLS).Select(w => w.Trim()).Where(w => w != string.Empty).AsResult();
     }
 }
+         

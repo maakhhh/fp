@@ -1,10 +1,12 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using ResultTools;
 using TagCloud.CloudLayouter;
 using TagCloud.SettingsProviders;
 
 namespace TagCloud.BitmapGenerators;
 
+[SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы")]
 public class BitmapGenerator: IBitmapGenerator
 {
     private readonly ISettingsProvider<BitmapGeneratorSettings> settingsProvider;
@@ -32,11 +34,9 @@ public class BitmapGenerator: IBitmapGenerator
                 using var graphics = Graphics.FromImage(b);
 
                 graphics.Clear(settings.BackgroundColor);
-                
-                var result = DrawWords(words, graphics, settings);
-                return result.IsSuccess
-                    ? bitmap
-                    : Result.Fail<Bitmap>(result.Error!);
+
+                return DrawWords(words, graphics, settings)
+                    .Then(_ => bitmap);
             });
     }
     
@@ -48,22 +48,17 @@ public class BitmapGenerator: IBitmapGenerator
         {
             using var font = new Font(settings.FontFamily, word.FontSize);
             var size = graphics.MeasureString(word.Word, font);
-            var position = layouter.PutNextRectangle(size.ToSize());
-            return position
+            var result = layouter.PutNextRectangle(size.ToSize())
                 .Then(p => new Rectangle(Point.Empty, settings.ImageSize).Contains(p)
                     ? p.AsResult()
                     : Result.Fail<Rectangle>("Point is out of bounds"))
                 .Then(p => new PointF(p.X + padding, p.Y + padding))
-                .Then(p =>
-                {
-                    graphics.DrawString(word.Word, font, brush, p);
-                    return Result.Ok();
-                });
+                .Then(p => graphics.DrawString(word.Word, font, brush, p));
+            if (!result.IsSuccess)
+                return result;
         }
         
         return Result.Ok();
     }
-    
-    
 }
 

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using ResultTools;
 
-namespace TagCloud.CloudLayouter;
+namespace TagCloud.CloudLayouter.PositionGenerator;
 
 public interface IPositionGenerator
 {

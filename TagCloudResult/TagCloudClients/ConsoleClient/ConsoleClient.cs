@@ -44,8 +44,8 @@ public class ConsoleClient : IClient
         readerSettings.SetSettings(SettingsManager.GetReaderSettings(options));
 
         generator.GenerateCloud()
-            .Then(Console.WriteLine)
-            .RefineError("Finished with error: ")
+            .Then(s => Console.WriteLine($"Result in path {s}"))
+            .RefineError("Finished with error")
             .OnFail(Console.WriteLine);
     }
 }
