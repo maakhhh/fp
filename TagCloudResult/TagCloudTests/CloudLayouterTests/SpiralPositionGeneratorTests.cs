@@ -14,10 +14,13 @@ public class SpiralPositionGeneratorTests
 
     [TestCase(0, TestName = "Zero step")]
     [TestCase(-1, TestName = "Negative step")]
-    public void GeneratorConstructor_ThrowArgumentException_WithUncorrectStep(double step)
+    public void Generator_ResultWithError_WithUncorrectStep(double step)
     {
-        Action action = () => settingsProvider.SetSettings(new(0.5, step, Point.Empty));
-        action.Should().Throw<ArgumentOutOfRangeException>();
+        settingsProvider.SetSettings(new(0.5, step, Point.Empty));
+        var generator = new SpiralPositionGenerator(settingsProvider);
+        var firstPoint = generator.GetPositions().First();
+        firstPoint.IsSuccess.Should().BeFalse();
+        firstPoint.Error.Should().Contain("must be greater than 0");
     }
 
     [TestCase(0, 0, TestName = "Zero center")]
@@ -28,8 +31,9 @@ public class SpiralPositionGeneratorTests
         settingsProvider.SetSettings(new(0.5, 0.1, center));
         var generator = new SpiralPositionGenerator(settingsProvider);
         var firstPoint = generator.GetPositions().First();
-
-        firstPoint.Should().Be(center);
+        
+        firstPoint.IsSuccess.Should().BeTrue();
+        firstPoint.Value.Should().Be(center);
     }
 
     [Test]
@@ -43,7 +47,8 @@ public class SpiralPositionGeneratorTests
 
         foreach (var point in points)
         {
-            var distance = GetDistanceBetweenPoints(center, point);
+            point.IsSuccess.Should().BeTrue();
+            var distance = GetDistanceBetweenPoints(center, point.Value);
             distance.Should().BeGreaterThan(prevDistance);
             prevDistance = distance;
         }

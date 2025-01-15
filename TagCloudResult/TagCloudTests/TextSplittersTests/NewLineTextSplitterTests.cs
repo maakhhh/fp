@@ -11,15 +11,15 @@ public class NewLineTextSplitterTests
     [Test]
     public void NotThrow_WhenEmptyText()
     {
-        var action = () => splitter.Split(string.Empty);
-        action.Should().NotThrow();
+        var words = splitter.Split(string.Empty);
+        words.IsSuccess.Should().BeTrue();
     }
 
     [Test]
     public void Throw_WhenTextIsNull()
     {
-        var action = () => splitter.Split(null);
-        action.Should().Throw<ArgumentNullException>();
+        var words = splitter.Split(null);
+        words.IsSuccess.Should().BeFalse();
     }
 
     [TestCase(new string[] { "a" }, new string[] { "a" }, TestName = "One word")]
@@ -28,8 +28,9 @@ public class NewLineTextSplitterTests
     public void SplitTextCorrect(string[] words, string[] expectedResult)
     {
         var text = string.Join(Environment.NewLine, words);
-        var actualResult = splitter.Split(text).ToArray();
-
-        actualResult.Should().BeEquivalentTo(expectedResult);
+        var actualResult = splitter.Split(text);
+        
+        actualResult.IsSuccess.Should().BeTrue();
+        actualResult.Value!.ToArray().Should().BeEquivalentTo(expectedResult);
     }
 }

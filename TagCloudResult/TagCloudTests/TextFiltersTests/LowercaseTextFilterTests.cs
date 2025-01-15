@@ -12,8 +12,9 @@ public class LowercaseTextFilterTests
     public void ReturnEmptyEnumerable_WhenTextIsEmpty()
     {
         var result = filter.Apply([]);
-
-        result.Should().BeEmpty();
+        
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     [TestCase(new string[1] { "a" }, new string[1] { "a" }, TestName = "Do nothing")]
@@ -22,7 +23,8 @@ public class LowercaseTextFilterTests
     public void FilterApplyCorrect(string[] words, string[] expectedResult)
     {
         var result = filter.Apply(words);
-
-        result.Should().BeEquivalentTo(expectedResult);
+        
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(expectedResult);
     }
 }

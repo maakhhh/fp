@@ -29,9 +29,9 @@ public class CircularCloudLayouterTests
         var layouter = new CircularCloudLayouter(
             new SpiralPositionGenerator(settingsProvider));
         var size = new Size(width, height);
-        Action action = () => layouter.PutNextRectangle(size);
-
-        action.Should().Throw<ArgumentException>();
+        var result = layouter.PutNextRectangle(size);
+        
+        result.IsSuccess.Should().BeFalse();
     }
 
     [TestCase(0, 0, TestName = "Zero center")]
@@ -50,8 +50,9 @@ public class CircularCloudLayouterTests
             rectangleSize.Width,
             rectangleSize.Height
         );
-
-        actualRectangle.Should().BeEquivalentTo(expectedRectangle);
+        
+        actualRectangle.IsSuccess.Should().BeTrue();
+        actualRectangle.Value.Should().BeEquivalentTo(expectedRectangle);
     }
 
     [Test]

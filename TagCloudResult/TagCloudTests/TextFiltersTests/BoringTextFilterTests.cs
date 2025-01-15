@@ -12,8 +12,9 @@ public class BoringTextFilterTests
     public void BeEmpty_WhenWordsIsEmpty()
     {
         var result = filter.Apply([]);
-
-        result.Should().BeEmpty();
+        
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
     }
 
     [TestCase(new string[1] { "hello" }, new string[1] { "hello" }, TestName = "Not skip simple words")]
@@ -24,6 +25,7 @@ public class BoringTextFilterTests
     public void ApplyCorrectly(string[] words, string[] expectedResult)
     {
         var result = filter.Apply(words);
-        result.Should().BeEquivalentTo(expectedResult);
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEquivalentTo(expectedResult);
     }
 }
