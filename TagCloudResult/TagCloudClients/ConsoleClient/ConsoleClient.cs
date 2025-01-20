@@ -34,18 +34,19 @@ public class ConsoleClient : IClient
         this.args = args;
     }
 
-    public void Run()
-    {
-        var options = Parser.Default.ParseArguments<Options>(args).Value;
-
-        bitmapSettings.SetSettings(SettingsManager.GetBitmapSettings(options));
-        saveSettings.SetSettings(SettingsManager.GetSaveSettings(options));
-        spiralSettings.SetSettings(SettingsManager.GetSpiralSettings(options));
-        readerSettings.SetSettings(SettingsManager.GetReaderSettings(options));
-
-        generator.GenerateCloud()
+    public Result<None> Run()
+        => Result.Of(() => Parser.Default.ParseArguments<Options>(args).Value)
+            .Then(o =>
+            {
+                bitmapSettings.SetSettings(SettingsManager.GetBitmapSettings(o));
+                saveSettings.SetSettings(SettingsManager.GetSaveSettings(o));
+                spiralSettings.SetSettings(SettingsManager.GetSpiralSettings(o));
+                readerSettings.SetSettings(SettingsManager.GetReaderSettings(o));
+                
+                return Result.Ok();
+            })
+            .Then(generator.GenerateCloud().AsResult())
             .Then(s => Console.WriteLine($"Result in path {s}"))
             .RefineError("Finished with error")
             .OnFail(Console.WriteLine);
-    }
 }

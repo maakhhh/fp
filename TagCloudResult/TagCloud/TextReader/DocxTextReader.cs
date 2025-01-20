@@ -22,11 +22,19 @@ public class DocxTextReader : ITextReader
         var settings = settingsProvider.GetSettings();
         if (!File.Exists(settings.Path))
             return Result.Fail<string>($"File {settings.Path} does not exist.");
-        using var doc = WordprocessingDocument.Open(settings.Path, false);
-        if (doc == null || doc.MainDocumentPart == null)
-            return string.Empty.AsResult();
-        var body = doc.MainDocumentPart.Document.Body;
-
+        Body body;
+        try
+        {
+            using var doc = WordprocessingDocument.Open(settings.Path, false);
+            if (doc.MainDocumentPart == null)
+                return string.Empty.AsResult();
+            body = doc.MainDocumentPart.Document.Body;
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<string>(e.Message);
+        }
+        
         if (body == null) 
             return string.Empty.AsResult();
         var texts = body.Descendants<Text>().Select(x => x.Text);

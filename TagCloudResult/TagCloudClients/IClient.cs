@@ -1,6 +1,8 @@
-﻿namespace TagCloudClients;
+﻿using ResultTools;
+
+namespace TagCloudClients;
 
 public interface IClient
 {
-    void Run();
+    Result<None> Run();
 }

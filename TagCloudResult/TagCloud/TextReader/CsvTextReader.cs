@@ -27,9 +27,17 @@ public class CsvTextReader : ITextReader
         };
         if (!File.Exists(settings.Path))
             return Result.Fail<string>($"File {settings.Path} does not exist.");
-        using var reader = new StreamReader(settings.Path);
-        using var csv = new CsvReader(reader, config);
-        return string.Join(Environment.NewLine, csv.GetRecords<Cell>().Select(c => c.Word)).AsResult();
+        try
+        {
+            using var reader = new StreamReader(settings.Path);
+            using var csv = new CsvReader(reader, config);
+            return string.Join(Environment.NewLine, csv.GetRecords<Cell>().Select(c => c.Word)).AsResult();
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<string>(e.Message);
+        }
+
     }
 
     private class Cell

@@ -51,8 +51,8 @@ public class TagCloudImageGenerator
         var maxWordCount = wordsFrequency.Values.Max();
         
         return wordsFrequency
-            .Select(w => new CloudWord(w.Key, GetWordFontSize(
-                w.Value, minWordCount, maxWordCount))).AsResult();
+            .Select(w => new CloudWord(w.Key, GetWordFontSize(w.Value, minWordCount, maxWordCount)))
+            .AsResult();
     }
 
     private Result<IEnumerable<string>> ApplyFilters(IEnumerable<string> words) =>

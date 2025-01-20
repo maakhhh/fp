@@ -39,12 +39,12 @@ public class CircularCloudLayouter : ICloudLayouter
 
     private Result<Rectangle> PutRectangleInNextPosition(Size rectagleSize)
     {
-        pointEnumerator.MoveNext();
+        if (!pointEnumerator.MoveNext())
+            return Result.Fail<Rectangle>("Cannot get next rectangle");
         var centerOfRectangle = pointEnumerator.Current;
         return centerOfRectangle
-            .Then(c => new Rectangle(
-                GetPositionFromCenter(c, rectagleSize),
-                rectagleSize));
+            .Then(c => GetPositionFromCenter(c, rectagleSize))
+            .Then(c => new Rectangle(c, rectagleSize));
     }
 
     private Point GetPositionFromCenter(Point center, Size size) => 

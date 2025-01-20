@@ -2,7 +2,19 @@
 
 public class Result<T>
 {
-    public T? Value { get; }
+    private T? value;
+    public T? Value
+    {
+        get
+        {
+            if (IsSuccess)
+                return value;
+            throw new InvalidOperationException(Error);
+        }
+        
+        private init => this.value = value;
+    }
+
     public string? Error { get; }
     public bool IsSuccess => Error == null;
 
@@ -10,13 +22,6 @@ public class Result<T>
     {
         Error = error;
         Value = value;
-    }
-
-    public T GetValueOrThrow()
-    {
-        if (IsSuccess)
-            return Value!;
-        throw new InvalidOperationException(Error);
     }
 }
 

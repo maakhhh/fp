@@ -36,20 +36,22 @@ public class BitmapGenerator: IBitmapGenerator
                 graphics.Clear(settings.BackgroundColor);
 
                 return DrawWords(words, graphics, settings)
-                    .Then(_ => bitmap);
+                    .Then(bitmap);
             });
     }
     
     private Result<None> DrawWords(IEnumerable<CloudWord> words, Graphics graphics, BitmapGeneratorSettings settings)
     {
-        var padding = 1.5f;
+        const float padding = 1.5f;
         using var brush = new SolidBrush(settings.WordColor);
         foreach (var word in words)
-        {
+        {   
+            if (word.Word is null)
+                return Result.Fail<None>($"Word {word.Word} has no word");
             using var font = new Font(settings.FontFamily, word.FontSize);
             var size = graphics.MeasureString(word.Word, font);
             var result = layouter.PutNextRectangle(size.ToSize())
-                .Then(p => new Rectangle(Point.Empty, settings.ImageSize).Contains(p)
+                .Then(p => IsRectangleInBounds(p, settings.ImageSize)
                     ? p.AsResult()
                     : Result.Fail<Rectangle>("Point is out of bounds"))
                 .Then(p => new PointF(p.X + padding, p.Y + padding))
@@ -60,5 +62,8 @@ public class BitmapGenerator: IBitmapGenerator
         
         return Result.Ok();
     }
+    
+    private bool IsRectangleInBounds(Rectangle rectangle, Size size) 
+    => rectangle.Left > 0 || rectangle.Top < 0 || rectangle.Right < size.Width || rectangle.Bottom > size.Height;
 }
 

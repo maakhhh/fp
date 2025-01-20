@@ -19,6 +19,9 @@ public static class ResultExtensions
             ? continuation(input.Value!)
             : Result.Fail<TOutput>(input.Error!);
 
+    public static Result<TOutput> Then<TInput, TOutput>(this Result<TInput> input, Result<TOutput> value)
+        => input.Then(_ => value);
+    
     public static Result<TInput> OnFail<TInput>(
         this Result<TInput> input,
         Action<string> handleError)
