@@ -23,7 +23,7 @@ public class CircularCloudLayouterTests
     [TestCase(1, 0, TestName = "Zero height")]
     [TestCase(-1, 1, TestName = "Negative width")]
     [TestCase(1, -1, TestName = "Negative height")]
-    public void Layouter_ThrowArgumentException_WithUncorrectData(int width, int height)
+    public void Layouter_ReturnError_WithUncorrectData(int width, int height)
     {
         settingsProvider.SetSettings(new(0.1, 0.5, Point.Empty));
         var layouter = new CircularCloudLayouter(

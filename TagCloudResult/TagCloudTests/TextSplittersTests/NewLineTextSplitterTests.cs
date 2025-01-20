@@ -9,14 +9,14 @@ public class NewLineTextSplitterTests
     private readonly NewLineTextSplitter splitter = new();
 
     [Test]
-    public void NotThrow_WhenEmptyText()
+    public void ResultWithoutError_WhenEmptyText()
     {
         var words = splitter.Split(string.Empty);
         words.IsSuccess.Should().BeTrue();
     }
 
     [Test]
-    public void Throw_WhenTextIsNull()
+    public void ErrorResult_WhenTextIsNull()
     {
         var words = splitter.Split(null);
         words.IsSuccess.Should().BeFalse();
